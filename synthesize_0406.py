@@ -170,4 +170,5 @@ if __name__ == "__main__":
     # man: 212 211 197 192 187 184 176 172 162 160 151
     # female: 60 126
     # model_call(text = "你们", speaker_id = 145, restore_step = 900000, mode = "single", pro_path = "config/AISHELL3/preprocess.yaml", model_path = "config/AISHELL3/model.yaml", train_path = "config/AISHELL3/train.yaml")
+    # 使用pycharm内部就无法使用命令行了
     model_call(text = "今晚八点比赛直播我们不见不散", speaker_id = 212, restore_step = 900000, mode = "single", pro_path = "config/AISHELL3/preprocess.yaml", model_path = "config/AISHELL3/model.yaml", train_path = "config/AISHELL3/train.yaml")

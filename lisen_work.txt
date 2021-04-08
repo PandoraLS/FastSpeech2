@@ -1,0 +1,31 @@
+MFA: 训练得到的文件夹
+mandarin.zip: 下载的模型文件
+对齐工具: https://montreal-forced-aligner.readthedocs.io/
+github项目地址: https://github.com/ming024/FastSpeech2
+
+命令行：
+python3 synthesize.py --text "大家好" --speaker_id 212 --restore_step 900000 --mode single -p config/AISHELL3/preprocess.yaml -m config/AISHELL3/model.yaml -t config/AISHELL3/train.yaml
+
+mfa train corpus_directory dictionary_path output_directory
+对齐训练命令:
+mfa train /mnt/workspace/tts/FastSpeech2/raw_data/AISHELL3/ /mnt/workspace/tts/FastSpeech2/lexicon/pinyin-lexicon-r.txt  ../tmp/tts-output
+mfa train /home/aone/lisen/mfa_lisen/raw_data/AISHELL3/ /home/aone/lisen/FastSpeech2-master/lexicon/pinyin-lexicon-r.txt  /home/aone/lisen/mfa_lisen
+对齐命令:
+mfa align /mnt/workspace/tts/FastSpeech2/raw_data/AISHELL3/SSB0005 /mnt/workspace/tts/FastSpeech2/lexicon/pinyin-lexicon-r.txt  ../tmp/mandarin.zip ../tmp/
+mfa align /home/aone/lisen/FastSpeech2-master/raw_data/AISHELL3/SSB0005 /home/aone/lisen/FastSpeech2-master/lexicon/pinyin-lexicon-r.txt  ../tmp/mandarin.zip ../tmp/
+
+mfa align /home/aone/lisen/mfa_lisen/raw_data/AISHELL3/SSB0005 /home/aone/lisen/code/FastSpeech2/lexicon/pinyin-lexicon-r.txt  /home/aone/lisen/mfa_lisen/mandarin.zip /home/aone/lisen/mfa_lisen/tmp/
+mfa align /home/aone/lisen/mfa_lisen/raw_data/AISHELL3/SSB0005 /home/aone/lisen/code/FastSpeech2/lexicon/pinyin-lexicon-r.txt  /home/aone/lisen/mfa_lisen/acoustic_model/aishell3_mandarin.zip /home/aone/lisen/mfa_lisen/tmp/
+mfa align /home/aone/lisen/mfa_lisen/raw_data/AISHELL3/SSB0005 /home/aone/lisen/code/FastSpeech2/lexicon/pinyin-lexicon-r.txt  /home/aone/lisen/tts/MFA/acoustic_model/aishell3_mandarin.zip /home/aone/lisen/mfa_lisen/tmp/
+
+
+使用预备训练模型对其
+mfa align corpus_directory dictionary_path acoustic_model_path output_directory
+
+仅用数据集对其
+mfa train corpus_directory dictionary_path output_directory
+
+
+2021年04月08日星期四 14点42分：
+需要使用mfa获取得到TextGrid的文件
+明确AISHELL3的处理流程，212的声音是如何得到的，然后仿照类似的操作，实现我们自己的数据

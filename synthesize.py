@@ -108,6 +108,14 @@ def synthesize(model, step, configs, vocoder, batchs, control_values):
             )
 
 
+"""
+命令行 合成
+python synthesize.py --text "今天好" --speaker_id 212 --restore_step 900000 --mode single -p config/AISHELL3/preprocess.yaml -m config/AISHELL3/model.yaml -t config/AISHELL3/train.yaml
+
+命令行 训练
+python train.py -p config/AISHELL3/preprocess.yaml -m config/AISHELL3/model.yaml -t config/AISHELL3/train.yaml
+"""
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()

@@ -29,3 +29,22 @@ mfa train corpus_directory dictionary_path output_directory
 2021年04月08日星期四 14点42分：
 需要使用mfa获取得到TextGrid的文件
 明确AISHELL3的处理流程，212的声音是如何得到的，然后仿照类似的操作，实现我们自己的数据
+
+预处理
+python3 preprocess.py config/AISHELL3/preprocess.yaml
+python3 preprocess.py config/AISHELL3Tiny/preprocess.yaml
+
+训练
+# python3 train.py -p config/AISHELL3/preprocess.yaml -m config/AISHELL3/model.yaml -t config/AISHELL3/train.yaml
+python3 train.py -p config/AISHELL3Tiny/preprocess.yaml -m config/AISHELL3Tiny/model.yaml -t config/AISHELL3Tiny/train.yaml
+
+tensorboard
+tensorboard --logdir output/log/AISHELL3Tiny
+
+合成命令
+python3 synthesize.py --text "大家好" --speaker_id 0 --restore_step 12000 --mode single -p config/AISHELL3Tiny/preprocess.yaml -m config/AISHELL3Tiny/model.yaml -t config/AISHELL3Tiny/train.yaml
+python3 synthesize.py --text "今天天气不错" --speaker_id 1 --restore_step 12000 --mode single -p config/AISHELL3Tiny/preprocess.yaml -m config/AISHELL3Tiny/model.yaml -t config/AISHELL3Tiny/train.yaml
+
+
+2021年04月08日星期四 18点28分：
+预处理

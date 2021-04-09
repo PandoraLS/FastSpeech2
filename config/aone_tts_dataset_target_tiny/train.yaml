@@ -1,9 +1,9 @@
 path:
-  ckpt_path: "./output/ckpt/AISHELL3Tiny"
-  log_path: "./output/log/AISHELL3Tiny"
-  result_path: "./output/result/AISHELL3Tiny"
+  ckpt_path: "./output/ckpt/aone_tts_dataset_target_tiny"
+  log_path: "./output/log/aone_tts_dataset_target_tiny"
+  result_path: "./output/result/aone_tts_dataset_target_tiny"
 optimizer:
-  batch_size: 16
+  batch_size: 12
   betas: [0.9, 0.98]
   eps: 0.000000001
   weight_decay: 0.0
@@ -13,7 +13,7 @@ optimizer:
   anneal_steps: [300000, 400000, 500000]
   anneal_rate: 0.3
 step:
-  total_step: 90000
+  total_step: 20000
   log_step: 100
   synth_step: 1000
   val_step: 1000

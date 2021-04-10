@@ -1,0 +1,11 @@
+2020年04月10日 星期六 13:10
+使用单独的航天数据会导致结果对航天数据过拟合，所以将航天数据和AISHELL3杂糅在一起处理
+杂糅数据文件夹为: /home/aone/lisen/dataset/AISHELL3Train_HangTian/
+使用的数据集为AISHELL3的Train部分和所有的aone_tts数据集
+因为AISHELL3Train/数据集生成很快(data_aishell3.py), 所以并没有备份
+
+航天数据集中huiguoqiang, lisen每人只有200条语句，所以删去了
+2020年04月10日 星期六 18:31
+在运行以下命令时, 部分AISHELL3的文件夹被忽略了, 定位原因发现AISHELL3数据copy时,wav文件copy失败, copy的均是0字节
+mfa train /home/aone/lisen/dataset/AISHELL3Train_HangTian/ /home/aone/lisen/code/FastSpeech2/lexicon/pinyin-lexicon-r.txt /home/aone/lisen/dataset/AISHELL3Train_HangTian_TextGrid/
+先使用已有的数据进行训练，后面再扩大数据集

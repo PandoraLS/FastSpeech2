@@ -88,9 +88,9 @@ def dataset_clean():
     clean aone_tts_dataset_target dataset
     :return:
     """
-    lab_wav_files_dir = "/home/aone/lisen/dataset/aone_tts_dataset_target/"
+    lab_wav_files_dir = "/home/aone/lisen/dataset/AISHELL3Train_HangTian/"
 
-    clean_content = "/home/aone/lisen/dataset/aone_tts_dataset_targetTextGrid/unaligned.txt"
+    clean_content = "/home/aone/lisen/dataset/AISHELL3Train_HangTian_TextGrid/unaligned.txt"
     with open(clean_content) as file:
         for line in file:
             file_name, _ = line.strip().split('\t')
@@ -101,11 +101,11 @@ def dataset_clean():
                 os.remove(lab_file_to_remove_path)
             if os.path.exists(wav_file_to_remove_path):
                 os.remove(wav_file_to_remove_path)
-            print(line.strip())
+            # print(line.strip())
 
 
 if __name__ == '__main__':
     pass
     # print(phonetic('啦啦'))
     # prep_speakers()
-    # dataset_clean()
+    dataset_clean()

@@ -1,0 +1,78 @@
+# 生成适配个人数据的模型
+
+### 个人数据预处理
+首先用pypinyin对汉子注音
+
+### 首先获取TextGrid文件
+文件首先改成 AISHELL3Tiny 文件结构
+```shell
+conda activate aligner
+mfa train /home/aone/lisen/mfa_lisen/raw_data/AISHELL3Tiny/ /home/aone/lisen/code/FastSpeech2/lexicon/pinyin-lexicon-r.txt  /home/aone/lisen/mfa_lisen/raw_data/TextGrid/
+mfa train /home/aone/lisen/dataset/aone_tts_dataset_target/ /home/aone/lisen/code/FastSpeech2/lexicon/pinyin-lexicon-r.txt  /home/aone/lisen/dataset/aone_tts_dataset_targetTextGrid/
+```
+说明：
+`/home/aone/lisen/mfa_lisen/raw_data/AISHELL3Tiny/`中的文件结构如下, 其中包含的均是wav和lab文件
+```shell
+(base) aone@aone:~/lisen/mfa_lisen/raw_data$ tree .
+.
+└── AISHELL3Tiny
+    ├── SSB0005
+    │   ├── SSB00050001.lab
+    │   ├── SSB00050001.wav
+    │   ├── SSB00050002.lab
+    │   ├── SSB00050002.wav
+    │   ├── SSB00050003.lab
+    │   ├── SSB00050003.wav
+    │   ├── SSB00050490.lab
+    │   └── SSB00050490.wav
+    └── SSB0009
+        ├── SSB00090001.lab
+        ├── SSB00090001.wav
+        ├── SSB00090002.lab
+        ├── SSB00090002.wav
+```
+lab文件内容example如下：
+```shell
+guang3 zhou1 nv3 da4 xue2 sheng1 deng1 shan1 shi1 lian2 si4 tian1 jing3 fang1 zhao3 dao4 yi2 si4 nv3 shi1
+```
+
+训练完成得到的`TextGrid/`在文件夹在`/home/aone/lisen/mfa_lisen/raw_data/TextGrid/`中
+
+需要将`TextGrid/`放在preprocessed_data/AISHELL3Tiny/文件夹下
+`/home/aone/lisen/mfa_lisen/raw_data/AISHELL3Tiny/`中的数据放到`/home/aone/lisen/code/FastSpeech2/raw_data/`文件夹下
+
+
+### fastspeech2 预处理
+配置好`AISHELL3Tiny/preprocess.yaml`，运行命令
+```shell
+python3 preprocess.py config/AISHELL3Tiny/preprocess.yaml
+python3 preprocess.py config/aone_tts_dataset_target/preprocess.yaml
+```
+程序会根据 TextGrid 生成 duration/, energy/, mel/, pitch/等文件夹以及 speakers.json, stats.json, train.txt, val.txt等文件
+
+
+### fastspeech2 训练
+```shell
+python3 train.py -p config/AISHELL3Tiny/preprocess.yaml -m config/AISHELL3Tiny/model.yaml -t config/AISHELL3Tiny/train.yaml
+python3 train.py -p config/aone_tts_dataset_target/preprocess.yaml -m config/aone_tts_dataset_target/model.yaml -t config/aone_tts_dataset_target/train.yaml
+```
+
+### tensorboard
+```shell
+tensorboard --logdir output/log/AISHELL3Tiny
+tensorboard --logdir output/log/aone_tts_dataset_target
+```
+
+### 合成命令
+```shell
+python3 synthesize.py --text "大家好" --speaker_id 0 --restore_step 12000 --mode single -p config/AISHELL3Tiny/preprocess.yaml -m config/AISHELL3Tiny/model.yaml -t config/AISHELL3Tiny/train.yaml
+```
+
+### 合成样例
+chencong_id 0
+```shell
+python3 synthesize.py --text "今晚八点比赛直播我们不见不散" --speaker_id 16 --restore_step 170000 --mode single -p config/aone_tts_dataset_target/preprocess.yaml -m config/aone_tts_dataset_target/model.yaml -t config/aone_tts_dataset_target/train.yaml
+python3 synthesize.py --text "面朝大海春暖花开" --speaker_id 16 --restore_step 170000 --mode single -p config/aone_tts_dataset_target/preprocess.yaml -m config/aone_tts_dataset_target/model.yaml -t config/aone_tts_dataset_target/train.yaml
+python3 synthesize.py --text "年轻人不要熬夜听我的" --speaker_id 16 --restore_step 170000 --mode single -p config/aone_tts_dataset_target/preprocess.yaml -m config/aone_tts_dataset_target/model.yaml -t config/aone_tts_dataset_target/train.yaml
+python3 synthesize.py --text "移动目标录入跟踪时长三十三目标高分六号" --speaker_id 16 --restore_step 170000 --mode single -p config/aone_tts_dataset_target/preprocess.yaml -m config/aone_tts_dataset_target/model.yaml -t config/aone_tts_dataset_target/train.yaml
+```

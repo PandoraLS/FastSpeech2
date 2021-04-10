@@ -120,4 +120,3 @@ hifigan/*.pth.tar
 hifigan/*.pth.tar.zip
 
 
-preprocessed_data/AISHELL3/TextGrid/

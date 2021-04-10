@@ -83,8 +83,29 @@ def prep_speakers():
         src_speaker_dir = os.path.join(src_root_dir, speaker_d)
         prep_one_speaker(src_speaker_dir, target_root_dir)
 
+def dataset_clean():
+    """
+    clean aone_tts_dataset_target dataset
+    :return:
+    """
+    lab_wav_files_dir = "/home/aone/lisen/dataset/aone_tts_dataset_target/"
+
+    clean_content = "/home/aone/lisen/dataset/aone_tts_dataset_targetTextGrid/unaligned.txt"
+    with open(clean_content) as file:
+        for line in file:
+            file_name, _ = line.strip().split('\t')
+            speaker_name = file_name[:-5]
+            lab_file_to_remove_path = lab_wav_files_dir + speaker_name + '/' + file_name + '.lab'
+            wav_file_to_remove_path = lab_wav_files_dir + speaker_name + '/' + file_name + '.wav'
+            if os.path.exists(lab_file_to_remove_path):
+                os.remove(lab_file_to_remove_path)
+            if os.path.exists(wav_file_to_remove_path):
+                os.remove(wav_file_to_remove_path)
+            print(line.strip())
+
 
 if __name__ == '__main__':
     pass
     # print(phonetic('啦啦'))
-    prep_speakers()
+    # prep_speakers()
+    # dataset_clean()

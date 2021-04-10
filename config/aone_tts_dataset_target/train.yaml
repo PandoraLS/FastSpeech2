@@ -1,7 +1,7 @@
 path:
-  ckpt_path: "./output/ckpt/aone_tts_dataset_target_tiny"
-  log_path: "./output/log/aone_tts_dataset_target_tiny"
-  result_path: "./output/result/aone_tts_dataset_target_tiny"
+  ckpt_path: "./output/ckpt/aone_tts_dataset_target"
+  log_path: "./output/log/aone_tts_dataset_target"
+  result_path: "./output/result/aone_tts_dataset_target"
 optimizer:
   batch_size: 12
   betas: [0.9, 0.98]
@@ -13,8 +13,8 @@ optimizer:
   anneal_steps: [300000, 400000, 500000]
   anneal_rate: 0.3
 step:
-  total_step: 60000
+  total_step: 500000
   log_step: 100
   synth_step: 1000
   val_step: 1000
-  save_step: 1000
+  save_step: 2000

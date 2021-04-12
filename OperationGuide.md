@@ -55,7 +55,14 @@ python3 preprocess.py config/aone_tts_dataset_target/preprocess.yaml
 ```shell
 python3 train.py -p config/AISHELL3Tiny/preprocess.yaml -m config/AISHELL3Tiny/model.yaml -t config/AISHELL3Tiny/train.yaml
 python3 train.py -p config/aone_tts_dataset_target/preprocess.yaml -m config/aone_tts_dataset_target/model.yaml -t config/aone_tts_dataset_target/train.yaml
+python3 train.py -p config/AISHELL3HangTian/preprocess.yaml -m config/AISHELL3HangTian/model.yaml -t config/AISHELL3HangTian/train.yaml
 ```
+
+### 基于上次训练
+```shell
+python3 train.py --restore_step 28000 -p config/AISHELL3HangTian/preprocess.yaml -m config/AISHELL3HangTian/model.yaml -t config/AISHELL3HangTian/train.yaml
+```
+训练时使用的是tmux, 此时如果滚动滚轮则训练不继续
 
 ### tensorboard
 ```shell

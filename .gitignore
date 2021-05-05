@@ -119,4 +119,6 @@ TextGrid/
 hifigan/*.pth.tar
 hifigan/*.pth.tar.zip
 
+# 文件夹
+preprocessed_data/AISHELL3SHURONG/
 

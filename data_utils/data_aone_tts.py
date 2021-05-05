@@ -2,7 +2,7 @@
 # @Time    : 2021/4/8 下午8:12
 
 """
-用于处理aone_tts_dataset/的数据, 将汉子变成注音的格式，同时文件结构修改为AISHELL3的格式
+用于处理aone_tts_dataset/的数据, 将汉字变成注音的格式，同时文件结构修改为AISHELL3的格式
 pypinyin:https://pypi.org/project/pypinyin/
 """
 import os, shutil

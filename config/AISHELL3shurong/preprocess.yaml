@@ -1,0 +1,32 @@
+dataset: "aone_tts"
+
+# preprocess.yaml生成preprocessed_data/中的数据，包括duration,energy, mel, pitch, TextGrid等等，如果已经生成好了，就没必要再生成了
+# 非常耗时
+path:
+  corpus_path: "/home/ming/Data/AISHELL-3" # 这个可以不修改
+  lexicon_path: "lexicon/pinyin-lexicon-r.txt"
+  raw_path: "./raw_data/AISHELL3shurong"
+  preprocessed_path: "./preprocessed_data/AISHELL3shurong"
+
+preprocessing:
+  val_size: 512
+  text:
+    text_cleaners: []
+    language: "zh"
+  audio:
+    sampling_rate: 22050
+    max_wav_value: 32768.0
+  stft:
+    filter_length: 1024
+    hop_length: 256
+    win_length: 1024
+  mel:
+    n_mel_channels: 80
+    mel_fmin: 0
+    mel_fmax: 8000 # please set to 8000 for HiFi-GAN vocoder, set to null for MelGAN vocoder
+  pitch:
+    feature: "phoneme_level" # support 'phoneme_level' or 'frame_level'
+    normalization: True
+  energy:
+    feature: "phoneme_level" # support 'phoneme_level' or 'frame_level'
+    normalization: True

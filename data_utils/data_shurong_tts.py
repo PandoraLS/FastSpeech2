@@ -118,7 +118,14 @@ def remove_file_punctuation():
         tar_file.write('\n')
 
 
+def text_grid_rename():
+    """
+    mfa得到的text_grid名称不对，
+    :return:
+    """
+
+
 if __name__ == '__main__':
     pass
     # remove_file_punctuation()
-    prep_shurong_raw_data()
+    # prep_shurong_raw_data()

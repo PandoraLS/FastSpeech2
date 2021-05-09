@@ -120,5 +120,14 @@ hifigan/*.pth.tar
 hifigan/*.pth.tar.zip
 
 # 文件夹
+preprocessed_data/*/duration/
+preprocessed_data/*/energy/
+preprocessed_data/*/mel/
+preprocessed_data/*/pitch/
+preprocessed_data/*/train.txt
+preprocessed_data/*/val.txt
+
+
 preprocessed_data/AISHELL3SHURONG/
+preprocessed_data/AISHELL3shurong
 

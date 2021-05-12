@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# @Time    : 2021/5/12 下午6:06
+
 import re
 from string import punctuation
 
@@ -165,12 +168,78 @@ def model_init(restore_step: int,pro_path, model_path, train_path, pitch_control
     control_values = pitch_control, energy_control, duration_control
     return model, restore_step, configs, vocoder, control_values
 
+# ------------------------------------------------------------------------------------------------
+import os
+import shutil
+def forceCopyFile(sfile, dfile):
+    """
+    将文件覆盖拷贝
+    Args:
+        sfile: 源文件path
+        dfile: 目标文件path
+    Returns:
+    """
+    if os.path.isfile(sfile):
+        shutil.copy2(sfile, dfile)
+
+def synthesize_speaker_id(speaker_id):
+    """
+    生成对应id的话音
+    :return:
+    """
+    txt_list = [
+        "爱丽丝开始觉得有点无聊了",
+        "姐姐在看书而爱丽丝无事可做",
+        "里面既没有图画",
+        "她不时看看姐姐的书",
+        "她和姐姐正坐在树下",
+        "也没有对话"
+    ]
+    result_root = "/home/aone/lisen/code/FastSpeech2/output/result/AISHELL3"
+    synthe_root = os.path.join(result_root, str(speaker_id))
+    if not os.path.exists(synthe_root):
+        os.makedirs(synthe_root)
+
+    for txt_item in txt_list:
+        model_call(text=txt_item, speaker_id=speaker_id, restore_step=900000, mode="single",
+                   pro_path="config/AISHELL3/preprocess.yaml", model_path="config/AISHELL3/model.yaml",
+                   train_path="config/AISHELL3/train.yaml")
+
+    files = os.listdir(result_root)
+    for file in files:
+        if file[-4:] == '.png' or file[-4:] == '.wav':
+            forceCopyFile(os.path.join(result_root, file), os.path.join(synthe_root, file))
+            os.remove(os.path.join(result_root, file))
+
 if __name__ == "__main__":
+    pass
     # speaker_id: 0-217
     # man: 212 211 197 192 187 184 176 172 162 160 151
     # female: 60 126
     # model_call(text = "你们", speaker_id = 145, restore_step = 900000, mode = "single", pro_path = "config/AISHELL3/preprocess.yaml", model_path = "config/AISHELL3/model.yaml", train_path = "config/AISHELL3/train.yaml")
     # 使用pycharm内部就无法使用命令行了
-    model_call(text = "今晚八点比赛直播我们不见不散", speaker_id = 212, restore_step = 900000, mode = "single", pro_path = "config/AISHELL3/preprocess.yaml", model_path = "config/AISHELL3/model.yaml", train_path = "config/AISHELL3/train.yaml")
+    # txt_list = [
+    #     "爱丽丝开始觉得有点无聊了",
+    #     "姐姐在看书而爱丽丝无事可做",
+    #     "里面既没有图画",
+    #     "她不时看看姐姐的书",
+    #     "她和姐姐正坐在树下",
+    #     "也没有对话"
+    # ]
+    # model_call(text = "今晚八点比赛直播，我们不见不散", speaker_id = 212, restore_step = 900000, mode = "single", pro_path = "config/AISHELL3/preprocess.yaml", model_path = "config/AISHELL3/model.yaml", train_path = "config/AISHELL3/train.yaml")
+
+    # synthesize_speaker_id(60)
+    # synthesize_speaker_id(126)
+    # synthesize_speaker_id(144)
+    # synthesize_speaker_id(22)
+    # synthesize_speaker_id(154)
+    # synthesize_speaker_id(107)
+    # synthesize_speaker_id(216)
+
+    # 长段话转录
+    long_sentence = "爱丽丝开始觉得有点无聊了 她和姐姐正坐在树下 姐姐在看书 而爱丽丝无事可做 她不时看看姐姐的书 里面既没有图画 也没有对话 一本书没有图画和对话有什么用呢 爱丽丝想 她想找点什么事儿做做 可天气很热 她觉得又因又无聊 正坐在那儿想事 忽然 一只长着粉红眼睛的白兔跑过她身边 看到一只兔子真没有什么可奇怪的 兔子说话时爱丽丝居然也不觉得太奇怪 兔子说 噢 天哪 噢 天哪 我要迟到了 后来爱丽丝想起这事觉得有点儿奇怪 但当时她并不觉得有什么奇怪然后兔子从自己的口袋里掏出一块表 看了看 赶紧走了 爱丽丝立刻跳了起来 我从未见过有口袋的兔子 或者兔子掏出一块手表来 她想 她跟在兔子后面很快跑过田野 她也没停下来想一想 当兔子跑进一个大的兔子洞时 爱丽丝立即跟了进去 走了一小段 兔子洞突然向下转 直深入地下 爱丽丝不由自主地掉了下去"
+    model_call(text=long_sentence, speaker_id=184, restore_step=900000, mode="single",
+               pro_path="config/AISHELL3/preprocess.yaml", model_path="config/AISHELL3/model.yaml",
+               train_path="config/AISHELL3/train.yaml")
 
 

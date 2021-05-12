@@ -128,6 +128,6 @@ preprocessed_data/*/train.txt
 preprocessed_data/*/val.txt
 
 
-preprocessed_data/AISHELL3SHURONG/
-preprocessed_data/AISHELL3shurong
+preprocessed_data/AISHELL3shurong/
+preprocessed_data/AISHELL3shurong2/
 

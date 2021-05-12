@@ -1,5 +1,4 @@
 import re
-import argparse
 from string import punctuation
 
 import torch
@@ -107,116 +106,71 @@ def synthesize(model, step, configs, vocoder, batchs, control_values):
                 train_config["path"]["result_path"],
             )
 
-
-"""
-命令行 合成
-python synthesize.py --text "今天好" --speaker_id 212 --restore_step 900000 --mode single -p config/AISHELL3/preprocess.yaml -m config/AISHELL3/model.yaml -t config/AISHELL3/train.yaml
-
-命令行 训练
-python train.py -p config/AISHELL3/preprocess.yaml -m config/AISHELL3/model.yaml -t config/AISHELL3/train.yaml
-"""
-
-if __name__ == "__main__":
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--restore_step", type=int, required=True)
-    parser.add_argument(
-        "--mode",
-        type=str,
-        choices=["batch", "single"],
-        required=True,
-        help="Synthesize a whole dataset or a single sentence",
-    )
-    parser.add_argument(
-        "--source",
-        type=str,
-        default=None,
-        help="path to a source file with format like train.txt and val.txt, for batch mode only",
-    )
-    parser.add_argument(
-        "--text",
-        type=str,
-        default=None,
-        help="raw text to synthesize, for single-sentence mode only",
-    )
-    parser.add_argument(
-        "--speaker_id",
-        type=int,
-        default=0,
-        help="speaker ID for multi-speaker synthesis, for single-sentence mode only",
-    )
-    parser.add_argument(
-        "-p",
-        "--preprocess_config",
-        type=str,
-        required=True,
-        help="path to preprocess.yaml",
-    )
-    parser.add_argument(
-        "-m", "--model_config", type=str, required=True, help="path to model.yaml"
-    )
-    parser.add_argument(
-        "-t", "--train_config", type=str, required=True, help="path to train.yaml"
-    )
-    parser.add_argument(
-        "--pitch_control",
-        type=float,
-        default=1.0,
-        help="control the pitch of the whole utterance, larger value for higher pitch",
-    )
-    parser.add_argument(
-        "--energy_control",
-        type=float,
-        default=1.0,
-        help="control the energy of the whole utterance, larger value for larger volume",
-    )
-    parser.add_argument(
-        "--duration_control",
-        type=float,
-        default=1.0,
-        help="control the speed of the whole utterance, larger value for slower speaking rate",
-    )
-    args = parser.parse_args()
-
+def model_call(text, speaker_id: int, restore_step: int, mode, pro_path, model_path, train_path, pitch_control = 1.0, energy_control = 1.0, duration_control = 1.0):
     # Check source texts
-    if args.mode == "batch":
-        assert args.source is not None and args.text is None
-    if args.mode == "single":
-        assert args.source is None and args.text is not None
+    source = None
+    if mode == "batch":
+        assert source is not None and text is None
+    if mode == "single":
+        assert source is None and text is not None
 
-    # Read Config
-    preprocess_config = yaml.load(
-        open(args.preprocess_config, "r"), Loader=yaml.FullLoader
-    )
-    model_config = yaml.load(open(args.model_config, "r"), Loader=yaml.FullLoader)
-    train_config = yaml.load(open(args.train_config, "r"), Loader=yaml.FullLoader)
+    # Read config
+    preprocess_config = yaml.load(open(pro_path, "r"), Loader=yaml.FullLoader)
+    model_config = yaml.load(open(model_path, "r"), Loader=yaml.FullLoader)
+    train_config = yaml.load(open(train_path, "r"), Loader=yaml.FullLoader)
     configs = (preprocess_config, model_config, train_config)
 
     # Get model
-    model = get_model(args, configs, device, train=False)
+    model = get_model(restore_step, configs, device, train=False)
 
     # Load vocoder
     vocoder = get_vocoder(model_config, device)
 
     # Preprocess texts
-    if args.mode == "batch":
+    if mode == "batch":
         # Get dataset
-        dataset = TextDataset(args.source, preprocess_config)
+        dataset = TextDataset(source, preprocess_config)
         batchs = DataLoader(
             dataset,
             batch_size=8,
             collate_fn=dataset.collate_fn,
         )
-    if args.mode == "single":
-        ids = raw_texts = [args.text[:100]]
-        speakers = np.array([args.speaker_id])
+    if mode == "single":
+        ids = raw_texts = [text[:100]]
+        speakers = np.array([speaker_id])
         if preprocess_config["preprocessing"]["text"]["language"] == "en":
-            texts = np.array([preprocess_english(args.text, preprocess_config)])
+            texts = np.array([preprocess_english(text, preprocess_config)])
         elif preprocess_config["preprocessing"]["text"]["language"] == "zh":
-            texts = np.array([preprocess_mandarin(args.text, preprocess_config)])
+            texts = np.array([preprocess_mandarin(text, preprocess_config)])
         text_lens = np.array([len(texts[0])])
         batchs = [(ids, raw_texts, speakers, texts, text_lens, max(text_lens))]
 
-    control_values = args.pitch_control, args.energy_control, args.duration_control
+    control_values = pitch_control, energy_control, duration_control
 
-    synthesize(model, args.restore_step, configs, vocoder, batchs, control_values)
+    synthesize(model, restore_step, configs, vocoder, batchs, control_values)
+
+def model_init(restore_step: int,pro_path, model_path, train_path, pitch_control = 1.0, energy_control = 1.0, duration_control = 1.0):
+    # Read config
+    preprocess_config = yaml.load(open(pro_path, "r"), Loader=yaml.FullLoader)
+    model_config = yaml.load(open(model_path, "r"), Loader=yaml.FullLoader)
+    train_config = yaml.load(open(train_path, "r"), Loader=yaml.FullLoader)
+    configs = (preprocess_config, model_config, train_config)
+
+    # Get model
+    model = get_model(restore_step, configs, device, train=False)
+
+    # Load vocoder
+    vocoder = get_vocoder(model_config, device)
+
+    control_values = pitch_control, energy_control, duration_control
+    return model, restore_step, configs, vocoder, control_values
+
+if __name__ == "__main__":
+    # speaker_id: 0-217
+    # man: 212 211 197 192 187 184 176 172 162 160 151
+    # female: 60 126
+    # model_call(text = "你们", speaker_id = 145, restore_step = 900000, mode = "single", pro_path = "config/AISHELL3/preprocess.yaml", model_path = "config/AISHELL3/model.yaml", train_path = "config/AISHELL3/train.yaml")
+    # 使用pycharm内部就无法使用命令行了
+    model_call(text = "今晚八点比赛直播我们不见不散", speaker_id = 212, restore_step = 900000, mode = "single", pro_path = "config/AISHELL3/preprocess.yaml", model_path = "config/AISHELL3/model.yaml", train_path = "config/AISHELL3/train.yaml")
+
+

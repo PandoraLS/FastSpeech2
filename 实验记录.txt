@@ -29,3 +29,13 @@ python3 synthesize.py --text "面朝大海春暖花开" --speaker_id 220 --resto
 python3 synthesize.py --text "年轻人不要熬夜听我的" --speaker_id 220 --restore_step 148000 --mode single -p config/AISHELL3shuRong/preprocess.yaml -m config/AISHELL3shuRong/model.yaml -t config/AISHELL3shuRong/train.yaml
 python3 synthesize.py --text "移动目标录入跟踪时长三十三目标高分六号" --speaker_id 220 --restore_step 148000 --mode single -p config/AISHELL3shuRong/preprocess.yaml -m config/AISHELL3shuRong/model.yaml -t config/AISHELL3shuRong/train.yaml
 
+
+
+2021年5月12日 星期三 17:30
+
+给某音箱精灵转录一些语音
+# speaker_id: 0-217
+# man: 212 211 197 192 187 184 176 172 162 160 151
+# female: 60 126
+model_call(text = "今晚八点比赛直播我们不见不散", speaker_id = 212, restore_step = 900000, mode = "single", pro_path = "config/AISHELL3/preprocess.yaml", model_path = "config/AISHELL3/model.yaml", train_path = "config/AISHELL3/train.yaml")
+python3 synthesize.py --text "今晚八点比赛直播我们不见不散" --speaker_id 212 --restore_step 900000 --mode single -p config/AISHELL3/preprocess.yaml -m config/AISHELL3/model.yaml -t config/AISHELL3/train.yaml
